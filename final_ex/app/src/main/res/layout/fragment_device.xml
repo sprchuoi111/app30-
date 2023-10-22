@@ -16,18 +16,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/tvNameRoomDv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:gravity="center"
         android:text="Name Room"
         android:textColor="#FF0000"
         android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_device" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvDevice"
@@ -35,12 +37,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_device"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameRoomDv"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddDv"
+        android:id="@+id/btnRemoveDv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -48,12 +50,12 @@
         android:layout_marginBottom="10dp"
         android:src="@drawable/baseline_minimize_24"
         android:text="Add Device"
-        app:layout_constraintBottom_toTopOf="@+id/btnRemoveDv"
+        app:layout_constraintBottom_toTopOf="@+id/btnAddDv"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
 
-        android:id="@+id/btnRemoveDv"
+        android:id="@+id/btnAddDv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

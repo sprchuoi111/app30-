@@ -37,11 +37,11 @@ public class DeviceFragment extends Fragment {
     private TextView tvNameRoomDv;
     private FloatingActionButton btnAddDv;
     private FloatingActionButton btnRemoveDv;
-    private EditText edtDevice;
     private String NameRinDv;
     private int index;
     private Toolbar toolbar_device;
     private  MainActivity mainActivity;
+    private EditText edt_remove_device;
     public static final String TAG = DeviceFragment.class.getName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,9 +63,9 @@ public class DeviceFragment extends Fragment {
         tvNameRoomDv = view.findViewById(R.id.tvNameRoomDv);
         btnAddDv = view.findViewById(R.id.btnAddDv);
         btnRemoveDv = view.findViewById(R.id.btnRemoveDv);
-        edtDevice = view.findViewById(R.id.edtDevice);
         rcvDevice = view.findViewById(R.id.rcvDevice);
         toolbar_device = view.findViewById(R.id.toolbar_device);
+        edt_remove_device = view.findViewById(R.id.edt_remove_device);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1); //tạo một GridLayoutManager
         rcvDevice.setLayoutManager(gridLayoutManager); //thiết lập GridLayoutManager làm LayoutManager cho RecyclerView của Device
         // get support of toolbar
@@ -94,16 +94,9 @@ public class DeviceFragment extends Fragment {
         btnRemoveDv.setOnClickListener(new View.OnClickListener() { //tạo sự kiện khi click vào nút Remove Device
             @Override
             public void onClick(View v) {
-                String deviceRemove = edtDevice.getText().toString(); //lưu tên thiết bị muốn xóa vào biến deviceRemove
-                for (int i = 0; i < Room.globalRooms.get(index).getNumber(); i++) {
-                    if (Room.globalRooms.get(index).getListDevice().get(i).getName().equals(deviceRemove)) {
-                        Room.globalRooms.get(index).removeDevice(i);
-                        deviceAdapter.notifyDataSetChanged();
-                        break;
-                        //kiểm tra từng thiết bị trong phòng, nếu có thiết bị trùng tên thì xóa bằng hàm removeDevice
-                    }
+                showDiaLogToRemoveDevice();
+                deviceAdapter.notifyDataSetChanged();
                 }
-            }
         });
     }
     private void showDiaLogToAddDevice(){
@@ -118,9 +111,9 @@ public class DeviceFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String DeviceName =  edt_add_Device.getText().toString();
                 boolean exited  = false;
-                for(Device device  : Room.globalRooms.get(index).getListDevice())
+                for (int i = 0; i < Room.globalRooms.get(index).getNumber(); i++)
                 {
-                    if(Room.globalRooms.get(index).getName().equals(DeviceName)){
+                    if(Room.globalRooms.get(index).getListDevice().get(i).getName().equals(DeviceName)){
                         Toast.makeText(getActivity(), "This Device is exited",Toast.LENGTH_SHORT).show();
                         exited = true;
                         break;
@@ -128,7 +121,7 @@ public class DeviceFragment extends Fragment {
 
                 }
                 if(!exited) {
-                    Room.globalRooms.get(index).addDevice(new Device(edtDevice.getText().toString(), false));
+                    Room.globalRooms.get(index).addDevice(new Device(edt_add_Device.getText().toString(), false));
                 }
             }
         });
@@ -139,28 +132,21 @@ public class DeviceFragment extends Fragment {
 
     private void showDiaLogToRemoveDevice(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View  diaLogView = getLayoutInflater().inflate(R.layout.dialog_remove_room, null);
+        View  diaLogView = getLayoutInflater().inflate(R.layout.dialog_remove_device, null);
         builder.setView(diaLogView);
         builder.setTitle("Remove Device");
-        builder.setIcon(R.drawable.baseline_add_home_24);
-        final EditText edt_remove_Room = diaLogView.findViewById(R.id.edt_remove_Room);
+        builder.setIcon(R.drawable.baseline_add_24);
+        final EditText edt_remove_device = diaLogView.findViewById(R.id.edt_remove_device);
         builder.setPositiveButton("Remove Room", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                boolean existed  = false;
-                String roomRemove = edt_remove_Room.getText().toString(); // Get the room name to remove.
-                for (int i = Room.globalRooms.size() - 1; i >= 0; i--) {
-                    Room lRoom = Room.globalRooms.get(i);
-                    if (lRoom.getName().toString().equals(roomRemove)) {
-                        Room.globalRooms.remove(i);
-                        mRoomAdapter.notifyDataSetChanged();
-                        // Iterate through globalRooms and remove the Room with the specified name.
-                        existed  = true;
+                String deviceRemove = edt_remove_device.getText().toString(); //lưu tên thiết bị muốn xóa vào biến deviceRemove
+                for (int i = 0; i < Room.globalRooms.get(index).getNumber(); i++) {
+                    if (Room.globalRooms.get(index).getListDevice().get(i).getName().equals(deviceRemove)) {
+                        Room.globalRooms.get(index).removeDevice(i);
+                        break;
+                        //kiểm tra từng thiết bị trong phòng, nếu có thiết bị trùng tên thì xóa bằng hàm removeDevice
                     }
-                }
-                if(!existed) {
-                    Toast.makeText(getActivity(),"This room doesn't exist" , Toast.LENGTH_SHORT).show();
-                    mRoomAdapter.notifyDataSetChanged();
                 }
             }
         });
