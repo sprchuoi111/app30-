@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#a6dfdfdf"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    tools:context=".MainActivity" >
+<!--    xmlns:android và xmlns:tools: Khai báo các không gian tên (namespace) cho các thuộc tính Android và công cụ hỗ trợ-->
+<!--    layout_width : "match_parent"  thuộc tính xác định chiều rộng bằng với chiều rộng của cha layout cha nó - layout bên ngoài cùng-->
+<!--    layout_heigth : "match_parent" thuộc tính xác định chiều cao bằng với chiều cao của cha thuộc tính đó-->
+<!--    gravity :"center_horizontal" căn chính phần tử con bên trong layout , center_horizontal : căn chỉnh ở giữa theo chiều ngang-->
+<!--    orientation="vertical" thuộc tính sắp xếp hướng các phần tử con bên trong layout , vertical : xắp xếp theo chiều dọc-->
+<!--    context=".MainActivity"  layout XML này liên quan đến lớp MainActivity trong ứng dụng.-->
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:background="#00c853"
+        android:layout_height="wrap_content"
+        android:text="B1" />
+    <!-- id  : đặt tên id cho button
+         layout_width : thuộc tính xác định chiều rộng phần tử
+         wrap_content : chỉnh độ rộng bằng với kích thước nội dung bên trong
+         background : chỉnh màu cho nền của button
+         text = "B1 " : đặt tên hiển thị cho button -->
+    <Button
+        android:layout_weight="1"
+        android:id="@+id/button5"
+        android:background="#B9D0E9"
+        android:textColor="#0E2239"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="B2" />
+<!--    layout_weight = 1  : chia phân bố chiều dài theo tổng không gian chiêu dài còn lại -->
+<!--    ở đây ta có : 1 1 2 - > tức là còn lại 4 phần : button5 chiếm 1 phần , button6 chiếm 1 phần , button7 chiếm 2 phần-->
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="B3" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_weight="2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#5392D5"
+        android:text="B4" />
+</LinearLayout>

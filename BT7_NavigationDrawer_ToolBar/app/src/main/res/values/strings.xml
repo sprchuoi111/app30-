@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BT7_NavigationDrawer_ToolBar</string>
+    <string name="action_home">Home</string>
+    <string name="action_Favorite">Favorite</string>
+    <string name="action_my_page">My Page</string>
+    <string name="grp_account">Account</string>
+    <string name="my_profile">My Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="navigation_drawer_open">Open Navigation</string>
+    <string name="navigation_drawer_close">Close Navigation</string>
+</resources>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "251000725134",
+    "project_id": "login-bt8",
+    "storage_bucket": "login-bt8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251000725134:android:df7797d89ca6efaaf233df",
+        "android_client_info": {
+          "package_name": "com.example.bt8_firebase_login"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzaf7rm0yPjjhyguthLtdXFhc2PmQhvdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

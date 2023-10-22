@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="15dp"
+    android:id="@+id/card_room"
+    android:layout_margin="10dp">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/img_room"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_des_layout"
+        android:orientation="vertical">
+
+
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_name_room"
+        android:text="Name"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:layout_margin="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_des_room"
+            android:text="Description"
+            android:layout_margin="10dp"
+            android:textSize="15dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+    <ToggleButton
+        android:id="@+id/btn_favor_room"
+        android:layout_width="40dp"
+        android:layout_margin="10dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:background="@drawable/btn_favorite"
+        android:textOff=" "
+        android:textOn=" "/>
+
+</androidx.cardview.widget.CardView>

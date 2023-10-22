@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    tools:context=".MainActivity">
+<!--    Tạo chain  b1 -> b2 -> b3 liên kết right b1-> left b2 ,right b2-> left b3-->
+<!--    left b3-> right b2,left b2-> right b1 -> Sau đó chuyển sang horizontal -> tạo ra dãy button nằm ngang <=> linearlayout nằm ngang-->
+<!--    liên kết b1 - b4 - b5 : -->
+<!--        top b1 -> bottom b4 , bottom b4 vs top b1-->
+<!--        bottom b1 - > top b5 , top b5 -> bottom b1-->
+<!--    -> tạo thành chain b1-b4-b5 -> set vertical -> thu được dãy button theo phương dọc =>thay thế cho linearlayout-->
+<!--    layout_constraintHorizontal_chainStyle="spread_inside" : chỉnh chain b1 - b2 -b3 theo hướng nằm ngang và có khoảng cách ở giữa-->
+<!--    layout_constraintHorizontal_weight="1" : button chiếm 1 phần trong chain b1 - b2 - b3-->
+<!--    layout_constraintVertical_weight="2" : button chiếm 2 phần trong chain b1 - b4 - b5-->
+<!--    Button b1 : -->
+    <Button
+        android:id="@+id/b1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:textColor="#1eb729"
+        android:text="B1 - HEAD"
+        app:layout_constraintBottom_toTopOf="@id/b5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintRight_toLeftOf="@id/b2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintVertical_weight="2"
+        app:layout_constraintTop_toBottomOf="@id/b4" />
+<!--    Button b2-->
+    <Button
+        android:id="@+id/b2"
+        android:text="B2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/b1"
+        app:layout_constraintRight_toLeftOf="@id/b3"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintTop_toTopOf="parent" />
+<!--    Button b3-->
+    <Button
+        android:id="@+id/b3"
+        android:text="B3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintLeft_toRightOf="@id/b2"
+        app:layout_constraintTop_toTopOf="parent" />
+<!--    Button b4-->
+<!--    layout_constraintVertical_chainStyle="spread_inside" : set chain b1 - b4 -b5-->
+<!--    được sử dụng để định nghĩa cách các phần tử con trong một chuỗi dọc (vertical chain) sẽ phân bố và căn chỉnh đối với nhau-->
+    <Button
+        android:id="@+id/b4"
+        android:text="B4 - HEAD"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        android:textColor="#cf3131"
+        app:layout_constraintBottom_toTopOf="@id/b1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/b1"
+        app:layout_constraintVertical_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp" />
+<!--    Button b5-->
+    <Button
+        android:id="@+id/b5"
+        android:text="B5"
+        app:layout_constraintTop_toBottomOf="@id/b1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/b1"
+        android:layout_width="wrap_content"
+        app:layout_constraintVertical_weight="3"
+        android:layout_height="0px" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

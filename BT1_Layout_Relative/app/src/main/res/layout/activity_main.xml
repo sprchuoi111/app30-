@@ -1,0 +1,65 @@
+    <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ExtraText">
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:id="@+id/icon_fb"
+        android:src="@drawable/facebook"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        />
+    <EditText
+        android:id="@+id/email"
+        android:layout_below="@id/icon_fb"
+        android:hint="Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+    </EditText>
+<!--    id="@+id/email" : tạo id-->
+<!--    hint="Email" : đặt gợi ý-->
+<!--    layout_width="match_parent" : Chỉnh layout vừa với layout cha theo chiều ngang-->
+<!--    layout_height="wrap_content"  : chỉnh layout tự động vừa với nội dung bên trong theo chiều cao-->
+    <EditText
+        android:id="@+id/password"
+        android:layout_below="@+id/email"
+        android:hint="Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+    </EditText>
+<!--    layout_below="@+id/email" : thiết lập vị trí layout ở bên dưới text có id email-->
+    <LinearLayout
+        android:layout_below="@id/password"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_below="@id/password"
+            android:id="@+id/signin"
+            android:text="SIGN IN"
+            android:background="#99AFC6"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"></Button>
+
+        <Button
+            android:layout_toLeftOf="@+id/signin"
+            android:id="@+id/signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/password"
+            android:background="#3588E1"
+            android:layout_marginLeft="16dp"
+            android:text="SIGN UP"></Button>
+    </LinearLayout>
+<!--    layout_toLeftOf ="@+id/signin" : thiết lập layout vị trí bên trái  của button có id signin-->
+
+</RelativeLayout>
+<!--RelativeLayout : thiết lập quan hệ không gian giữa các phần tử con dựa trên mối quan hệ tương đối, chứ không phải dựa vào vị trí cố định.-->

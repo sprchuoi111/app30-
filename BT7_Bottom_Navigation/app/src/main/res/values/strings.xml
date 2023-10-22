@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BT7_Bottom_Navigation</string>
+    <string name="action_home">Home</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="action_my_page">My Page</string>
+    
+</resources>
