@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.final_ex.MainActivity;
 import com.example.final_ex.R;
 import com.example.final_ex.object.Device;
+import com.example.final_ex.object.Room;
 
 import java.util.List;
 
@@ -65,6 +66,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
                                 list_device.remove(currentPosition);
                                 notifyDataSetChanged();
                                 // Notify RoomAdapter that underlying data has changed and it should refresh itself.
+                                holder.mainActivity.saveRoomList(Room.globalRooms,"listRoom");
                             }
                         }
                     })
@@ -124,12 +126,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         private Switch sw_led;
         private ImageView img_led;
         private SeekBar sk_led;
+        private MainActivity mainActivity;
         public DeviceViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_led = itemView.findViewById(R.id.txt_led);
             sw_led = itemView.findViewById(R.id.sw_led);
             img_led = itemView.findViewById(R.id.img_led);
             sk_led = itemView.findViewById(R.id.sk_led);
+            mainActivity = (MainActivity) itemView.getContext();
         }
     }
 }

@@ -11,18 +11,27 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.se.omapi.Session;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.final_ex.fragment.DeviceFragment;
 import com.example.final_ex.fragment.HomeFragment;
 import com.example.final_ex.fragment.LogoutFragment;
 import com.example.final_ex.fragment.SettingFragment;
+import com.example.final_ex.object.Room;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -131,6 +140,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mDrawerLayout.closeDrawer(GravityCompat.START); //nếu Drawer đang mở sẽ đóng Drawer lại
         } else {
             super.onBackPressed(); //nếu Drawer đã đóng thì gọi phương thức cha
+        }
+    }
+
+    public void saveRoomList(List<Room> list, String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();
+        Toast.makeText(MainActivity.this, "Save complete", Toast.LENGTH_SHORT).show();
+    }
+
+    public List<Room> getRoomList(String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        Gson gson = new Gson();
+        String json = prefs.getString(key, null);
+        if (json != null) {
+            Type type = new TypeToken<List<Room>>() {}.getType();
+            List<Room> roomList = gson.fromJson(json, type);
+            return roomList;
+        } else {
+            return new ArrayList<>();
         }
     }
 }

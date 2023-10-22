@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.final_ex.Interface.SelectListener;
+import com.example.final_ex.MainActivity;
 import com.example.final_ex.R;
 import com.example.final_ex.object.Room;
 
@@ -82,8 +83,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
                             if (currentPosition != RecyclerView.NO_POSITION) {
                                 // Remove the room at 'currentPosition' from mListRoom.
                                 mListRoom.remove(currentPosition);
+
                                 notifyDataSetChanged();
                                 // Notify RoomAdapter that underlying data has changed and it should refresh itself.
+                                holder.mainActivity.saveRoomList(Room.globalRooms,"listRoom");
                             }
                         }
                     })
@@ -110,12 +113,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
         private TextView txt_number_device;
         private CardView card_room;
 
+        private MainActivity mainActivity;
+
         public RoomViewHolder(@NonNull View itemView) {
             super(itemView);
             layoutRoom = itemView.findViewById(R.id.layoutRoom);
             txt_room = itemView.findViewById(R.id.txt_room);
             txt_number_device = itemView.findViewById(R.id.txt_number_device);
             card_room = itemView.findViewById(R.id.card_room);
+            mainActivity = (MainActivity) itemView.getContext();
         }
     }
 }
