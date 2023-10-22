@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">final_ex</string>
+    <string name="home_nav">Home</string>
+    <string name="setting_nav">Setting</string>
+    <string name="logout_nav">Logout</string>
+    <string name="account_nav">Account</string>
+    <string name="my_profile_nav">My Profile</string>
+    <string name="change_password_nav">Change Password</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
