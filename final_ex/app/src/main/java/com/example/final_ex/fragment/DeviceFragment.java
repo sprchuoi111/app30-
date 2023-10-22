@@ -1,8 +1,10 @@
 package com.example.final_ex.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +33,12 @@ import com.example.final_ex.object.Device;
 import com.example.final_ex.object.Room;
 import com.example.final_ex.viewholder.DeviceAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceFragment extends Fragment {
     //tạo các biến để tham chiếu đến các phần tử ở layout
@@ -40,8 +49,8 @@ public class DeviceFragment extends Fragment {
     private String NameRinDv;
     private int index;
     private Toolbar toolbar_device;
-    private  MainActivity mainActivity;
     private EditText edt_remove_device;
+    private DeviceAdapter deviceAdapter;
     public static final String TAG = DeviceFragment.class.getName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,14 +88,13 @@ public class DeviceFragment extends Fragment {
         }
 
         tvNameRoomDv.setText(NameRinDv); //hiển thị tên phòng lên TextView
-        DeviceAdapter deviceAdapter = new DeviceAdapter(Room.globalRooms.get(index).getListDevice()); //tạo một DeviceAdapter với danh sách thiết bị tương ứng của phòng được chọn
+        deviceAdapter = new DeviceAdapter(Room.globalRooms.get(index).getListDevice()); //tạo một DeviceAdapter với danh sách thiết bị tương ứng của phòng được chọn
         rcvDevice.setAdapter(deviceAdapter); //set DeviceAdapter cho RecyclerView
 
         btnAddDv.setOnClickListener(new View.OnClickListener() {//tạo phương thức khi click vào nút Add Device
             @Override
             public void onClick(View v) {
                 showDiaLogToAddDevice();
-                deviceAdapter.notifyDataSetChanged();
                 //thêm thiết bị vào phần tử tương ứng trong globalRooms bằng hàm addDevice với tên lấy từ Edit Text và giá trị ban đầu của trạng thái là false
             }
         });
@@ -95,9 +103,10 @@ public class DeviceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showDiaLogToRemoveDevice();
-                deviceAdapter.notifyDataSetChanged();
+
                 }
         });
+
     }
     private void showDiaLogToAddDevice(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -122,9 +131,13 @@ public class DeviceFragment extends Fragment {
                 }
                 if(!exited) {
                     Room.globalRooms.get(index).addDevice(new Device(edt_add_Device.getText().toString(), false));
+                    deviceAdapter.notifyDataSetChanged();
+                    saveRoomList(Room.globalRooms, "listRoom");
+
                 }
             }
         });
+
         builder.setNegativeButton("Cancel" ,null);
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -144,12 +157,15 @@ public class DeviceFragment extends Fragment {
                 for (int i = 0; i < Room.globalRooms.get(index).getNumber(); i++) {
                     if (Room.globalRooms.get(index).getListDevice().get(i).getName().equals(deviceRemove)) {
                         Room.globalRooms.get(index).removeDevice(i);
+                        deviceAdapter.notifyDataSetChanged();
+                        saveRoomList(Room.globalRooms, "listRoom");
                         break;
                         //kiểm tra từng thiết bị trong phòng, nếu có thiết bị trùng tên thì xóa bằng hàm removeDevice
                     }
                 }
             }
         });
+        deviceAdapter.notifyDataSetChanged();
         builder.setNegativeButton("Cancel" ,null);
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -172,4 +188,29 @@ public class DeviceFragment extends Fragment {
             }
         });
     }
+
+    public void saveRoomList(List<Room> list, String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();
+        Toast.makeText(getActivity(), "Save complete", Toast.LENGTH_SHORT).show();
+    }
+
+    public List<Room> getRoomList(String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Gson gson = new Gson();
+        String json = prefs.getString(key, null);
+        if (json != null) {
+            Type type = new TypeToken<List<Room>>() {}.getType();
+            List<Room> roomList = gson.fromJson(json, type);
+            return roomList;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+
 }
