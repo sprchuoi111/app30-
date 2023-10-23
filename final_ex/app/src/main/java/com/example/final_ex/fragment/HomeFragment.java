@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
         mMainActivity = (MainActivity) getActivity(); // Get a reference to the hosting Activity (assumed to be MainActivity).
         rcvRoom = mView.findViewById(R.id.rcvRoom); // Find the RecyclerView in the layout.
         // get List room from SharePreference
-        Room.globalRooms =  getRoomList("listRoom");
+        Room.globalRooms =  mMainActivity.getRoomList("listRoom");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity);
         rcvRoom.setLayoutManager(linearLayoutManager); // Create and set a LinearLayoutManager for rcvRoom.
         mRoomAdapter = new RoomAdapter(Room.globalRooms, new SelectListener() {
@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment {
                 }
                 if(!exited) {
                     Room.globalRooms.add(new Room(edt_add_Room.getText().toString(),Room.default_device()));
-                    saveRoomList(Room.globalRooms, "listRoom");
+                    mMainActivity.saveRoomList(Room.globalRooms, "listRoom");
                     mRoomAdapter.notifyDataSetChanged();
                 }
 
@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment {
                         mRoomAdapter.notifyDataSetChanged();
                         // Iterate through globalRooms and remove the Room with the specified name.
                         existed  = true;
-                        saveRoomList(Room.globalRooms, "listRoom");
+                        mMainActivity.saveRoomList(Room.globalRooms, "listRoom");
                        }
                }
                 if(!existed) {
@@ -191,29 +191,6 @@ public class HomeFragment extends Fragment {
 //            return new ArrayList<>(); // Return an empty list if the data doesn't exist in SharedPreferences
 //        }
 //    }
-    //get Room from previous deviec
-    public void saveRoomList(List<Room> list, String key) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = prefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString(key, json);
-        editor.apply();
-        Toast.makeText(getActivity(), "Save complete", Toast.LENGTH_SHORT).show();
-    }
-
-    public List<Room> getRoomList(String key) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Gson gson = new Gson();
-        String json = prefs.getString(key, null);
-        if (json != null) {
-            Type type = new TypeToken<List<Room>>() {}.getType();
-            List<Room> roomList = gson.fromJson(json, type);
-            return roomList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
 
 
 

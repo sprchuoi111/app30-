@@ -51,6 +51,7 @@ public class DeviceFragment extends Fragment {
     private Toolbar toolbar_device;
     private EditText edt_remove_device;
     private DeviceAdapter deviceAdapter;
+    private MainActivity mainActivity;
     public static final String TAG = DeviceFragment.class.getName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class DeviceFragment extends Fragment {
         btnAddDv = view.findViewById(R.id.btnAddDv);
         btnRemoveDv = view.findViewById(R.id.btnRemoveDv);
         rcvDevice = view.findViewById(R.id.rcvDevice);
+        mainActivity = (MainActivity) getContext();
         toolbar_device = view.findViewById(R.id.toolbar_device);
         edt_remove_device = view.findViewById(R.id.edt_remove_device);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1); //tạo một GridLayoutManager
@@ -132,7 +134,7 @@ public class DeviceFragment extends Fragment {
                 if(!exited) {
                     Room.globalRooms.get(index).addDevice(new Device(edt_add_Device.getText().toString(), false));
                     deviceAdapter.notifyDataSetChanged();
-                    saveRoomList(Room.globalRooms, "listRoom");
+                    mainActivity.saveRoomList(Room.globalRooms, "listRoom");
 
                 }
             }
@@ -158,14 +160,13 @@ public class DeviceFragment extends Fragment {
                     if (Room.globalRooms.get(index).getListDevice().get(i).getName().equals(deviceRemove)) {
                         Room.globalRooms.get(index).removeDevice(i);
                         deviceAdapter.notifyDataSetChanged();
-                        saveRoomList(Room.globalRooms, "listRoom");
+                        mainActivity.saveRoomList(Room.globalRooms, "listRoom");
                         break;
                         //kiểm tra từng thiết bị trong phòng, nếu có thiết bị trùng tên thì xóa bằng hàm removeDevice
                     }
                 }
             }
         });
-        deviceAdapter.notifyDataSetChanged();
         builder.setNegativeButton("Cancel" ,null);
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -188,29 +189,5 @@ public class DeviceFragment extends Fragment {
             }
         });
     }
-
-    public void saveRoomList(List<Room> list, String key) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = prefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString(key, json);
-        editor.apply();
-        Toast.makeText(getActivity(), "Save complete", Toast.LENGTH_SHORT).show();
-    }
-
-    public List<Room> getRoomList(String key) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Gson gson = new Gson();
-        String json = prefs.getString(key, null);
-        if (json != null) {
-            Type type = new TypeToken<List<Room>>() {}.getType();
-            List<Room> roomList = gson.fromJson(json, type);
-            return roomList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
 
 }
