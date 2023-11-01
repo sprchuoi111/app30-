@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.se.omapi.Session;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.final_ex.fragment.DeviceFragment;
@@ -26,12 +27,23 @@ import com.example.final_ex.object.Room;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,9 +55,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int mCurrentFragment = FRAGMENT_HOME;
 
     private DrawerLayout mDrawerLayout;
-    Toolbar toolbar;
-    ActionBarDrawerToggle toggle;
-    NavigationView navigationView;
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
+
+
+
+    private DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // auto set home fragment when open app
         replaceFragment(new HomeFragment());
         // create stack to store fragment
+        //get RealTime database
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("room");
 
     }
 
@@ -144,25 +162,127 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void saveRoomList(List<Room> list, String key) {
+        // Create a SharedPreferences object associated with the MainActivity.
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        SharedPreferences.Editor editor = prefs.edit();
+
+        // Initialize Gson to convert the list of 'Room' objects into a JSON structure.
         Gson gson = new Gson();
+
+        // Convert the list of 'Room' objects to a JSON string.
         String json = gson.toJson(list);
+
+        // Get an editor to modify the SharedPreferences.
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Store the JSON string under the specified key in SharedPreferences.
         editor.putString(key, json);
+
+        // Apply the changes asynchronously.
         editor.apply();
+
+        // Display a short toast message to confirm that the save operation is complete.
         Toast.makeText(MainActivity.this, "Save complete", Toast.LENGTH_SHORT).show();
     }
 
+
     public List<Room> getRoomList(String key) {
+        // Retrieve the default SharedPreferences associated with the MainActivity.
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+        // Initialize Gson for object deserialization.
         Gson gson = new Gson();
+
+        // Retrieve the JSON string stored in SharedPreferences under the given key.
         String json = prefs.getString(key, null);
+
+        // Check if a JSON string was successfully retrieved.
         if (json != null) {
+            // Define the type of object to deserialize (List of Room) using TypeToken.
             Type type = new TypeToken<List<Room>>() {}.getType();
+
+            // Deserialize the JSON string into a List of Room objects.
             List<Room> roomList = gson.fromJson(json, type);
+
+            // Return the deserialized list of Room objects.
             return roomList;
         } else {
+            // If no data was found under the specified key, return an empty List.
             return new ArrayList<>();
         }
     }
+
+    public void AddRoomListToFireBase(List<Room> list) {
+        // Remove all value in ref
+        RemoveRoomToFireBase(list);
+        // Assuming 'list' is your list of rooms
+
+        // Get a reference to the "rooms" node in the Firebase Realtime Database
+//        DatabaseReference roomsRef = mDatabase.getRef();
+
+        // Push each room to create a unique key for each entry
+//            DatabaseReference roomRef = roomsRef.push();
+            mDatabase.setValue(Room.globalRooms)
+                    .addOnSuccessListener(aVoid -> {
+                        // Data has been saved successfully
+                        Toast.makeText(MainActivity.this, "Save complete", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any errors
+                        Toast.makeText(MainActivity.this, "Error saving data", Toast.LENGTH_SHORT).show();
+                    });
+    }
+    public void RemoveRoomToFireBase(List<Room> list) {
+        // Assuming 'list' is your list of rooms
+
+        // Get a reference to the "rooms" node in the Firebase Realtime Database
+
+
+        // Push each room to create a unique key for each entry
+        mDatabase.removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    // Data has been saved successfully
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors
+                    Toast.makeText(MainActivity.this, "Error saving data", Toast.LENGTH_SHORT).show();
+                });
+    }
+    // chua viet xong XD
+    public void RealtimeChangeValueDevice(){
+        // get specific room key for device
+        DatabaseReference roomsRef = mDatabase.getRef();
+        String roomNameToFind = "Your Room Name"; // Replace with the actual room name you want to find
+
+        roomsRef.orderByChild("roomName").equalTo(roomNameToFind).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot roomSnapshot : dataSnapshot.getChildren()) {
+                    String roomKey = roomSnapshot.getKey();
+                    // Use roomKey for your purpose
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
+        Query statebutton = FirebaseDatabase.getInstance().getReference("rooms").getRef().child("listDevice").orderByChild("0");
+        statebutton.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+
+
 }

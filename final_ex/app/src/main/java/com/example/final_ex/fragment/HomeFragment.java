@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 public class HomeFragment extends Fragment {
-    // Tạo các biến để tham chiếu đến các phần tử ở layout
+    // Create variables to reference elements in the layout.
     private RecyclerView rcvRoom; // A reference to the RecyclerView for displaying rooms.
     private View mView; // A reference to the main view of the fragment.
     private FloatingActionButton btnAddRoom; // A reference to a button for adding a room.
@@ -41,8 +41,7 @@ public class HomeFragment extends Fragment {
     private MainActivity mMainActivity; // A reference to the main activity.
     private RoomAdapter mRoomAdapter; // An adapter for populating data in the RecyclerView.
 
-
-    // Ghi đè phương thức onResume để xử lý khi chuyển sang màn hình khác
+    // Override the onResume method to handle screen transitions.
     @Override
     public void onResume() {
         mRoomAdapter.notifyDataSetChanged(); // Refresh the RecyclerView data.
@@ -56,8 +55,10 @@ public class HomeFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_home, container, false); // Inflate the fragment_home layout into mView.
         mMainActivity = (MainActivity) getActivity(); // Get a reference to the hosting Activity (assumed to be MainActivity).
         rcvRoom = mView.findViewById(R.id.rcvRoom); // Find the RecyclerView in the layout.
+
         // get List room from SharePreference
-        Room.globalRooms =  mMainActivity.getRoomList("listRoom");
+        Room.globalRooms = mMainActivity.getRoomList("listRoom");
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity);
         rcvRoom.setLayoutManager(linearLayoutManager); // Create and set a LinearLayoutManager for rcvRoom.
         mRoomAdapter = new RoomAdapter(Room.globalRooms, new SelectListener() {
@@ -70,18 +71,16 @@ public class HomeFragment extends Fragment {
         rcvRoom.setAdapter(mRoomAdapter); // Set the adapter for the RecyclerView.
 
         // Tham chiếu đến EditText và nút nhấn
+        // Reference EditText and buttons.
         btnAddRoom = mView.findViewById(R.id.btnAdd); // Find the button for adding a room.
         btnRemoveRoom = mView.findViewById(R.id.btnRemove); // Find the button for removing a room.
-        //floating_btn_add_rm_room = mView.findViewById(R.id.floating_btn_add_rm_room); // floating button for remove room
 
         btnAddRoom.setOnClickListener(new View.OnClickListener() {
             // Set a click event listener for the "Add Room" button.
             @Override
             public void onClick(View v) {
-                // when clicked show the dialog show
+                // when clicked show the dialog to add a room.
                 showDiaLogToAddRoom();
-
-
             }
         });
 
@@ -98,9 +97,11 @@ public class HomeFragment extends Fragment {
 
         return mView; // Return the inflated view (fragment_home).
     }
-    private void showDiaLogToAddRoom(){
+
+    // Method to show a dialog for adding a room.
+    private void showDiaLogToAddRoom() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View  diaLogView = getLayoutInflater().inflate(R.layout.dialog_add_room, null);
+        View diaLogView = getLayoutInflater().inflate(R.layout.dialog_add_room, null);
         builder.setView(diaLogView);
         builder.setTitle("Add Room");
         builder.setIcon(R.drawable.baseline_add_home_24);
@@ -108,32 +109,33 @@ public class HomeFragment extends Fragment {
         builder.setPositiveButton("Add Room", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String roomName =  edt_add_Room.getText().toString();
-                boolean exited  = false;
-                for(Room room : Room.globalRooms)
-                {
-                    if(room.getName().equals(roomName)){
-                        Toast.makeText(getActivity(), "This room is exited",Toast.LENGTH_SHORT).show();
-                        exited = true;
+                // Add a new room when the "Add Room" button is clicked.
+                String roomName = edt_add_Room.getText().toString();
+                boolean existed = false;
+                for (Room room : Room.globalRooms) {
+                    if (room.getName().equals(roomName)) {
+                        Toast.makeText(getActivity(), "This room already exists", Toast.LENGTH_SHORT).show();
+                        existed = true;
                         break;
                     }
-
                 }
-                if(!exited) {
-                    Room.globalRooms.add(new Room(edt_add_Room.getText().toString(),Room.default_device()));
+                if (!existed) {
+                    Room.globalRooms.add(new Room(edt_add_Room.getText().toString(), Room.default_device()));
                     mMainActivity.saveRoomList(Room.globalRooms, "listRoom");
+                    mMainActivity.AddRoomListToFireBase(Room.globalRooms);
                     mRoomAdapter.notifyDataSetChanged();
                 }
-
             }
         });
-        builder.setNegativeButton("Cancel" ,null);
+        builder.setNegativeButton("Cancel", null);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private void showDiaLogToRemoveRoom(){
+
+    // Method to show a dialog for removing a room.
+    private void showDiaLogToRemoveRoom() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View  diaLogView = getLayoutInflater().inflate(R.layout.dialog_remove_room, null);
+        View diaLogView = getLayoutInflater().inflate(R.layout.dialog_remove_room, null);
         builder.setView(diaLogView);
         builder.setTitle("Remove Room");
         builder.setIcon(R.drawable.baseline_add_home_24);
@@ -141,56 +143,29 @@ public class HomeFragment extends Fragment {
         builder.setPositiveButton("Remove Room", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                boolean existed  = false;
+                boolean existed = false;
                 String roomRemove = edt_remove_Room.getText().toString(); // Get the room name to remove.
                 for (int i = Room.globalRooms.size() - 1; i >= 0; i--) {
                     Room lRoom = Room.globalRooms.get(i);
                     if (lRoom.getName().toString().equals(roomRemove)) {
                         Room.globalRooms.remove(i);
                         mRoomAdapter.notifyDataSetChanged();
-                        // Iterate through globalRooms and remove the Room with the specified name.
-                        existed  = true;
+                        mMainActivity.AddRoomListToFireBase(Room.globalRooms);
+                        existed = true;
                         mMainActivity.saveRoomList(Room.globalRooms, "listRoom");
-                       }
-               }
-                if(!existed) {
-                    Toast.makeText(getActivity(),"This room doesn't exist" , Toast.LENGTH_SHORT).show();
+                    }
                 }
-
+                if (!existed) {
+                    Toast.makeText(getActivity(), "This room doesn't exist", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        builder.setNegativeButton("Cancel" ,null);
+        builder.setNegativeButton("Cancel", null);
         AlertDialog dialog = builder.create();
         dialog.show();
-
-
     }
-//    public void saveRoomList(){
-//        // Convert the list of rooms to a JSON string
-//        Gson gson = new Gson(); // You'll need to import the Gson library
-//        String roomListJson = gson.toJson(Room.globalRooms);
-//
-//        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPreferences" , Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("Room List" , roomListJson);
-//        editor.apply();
-//        Toast.makeText(getActivity(), " Save complete" , Toast.LENGTH_SHORT).show();
-//
-//    }
-//    public List<Room> getRoomList(){
-//        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-//        String roomListJson = sharedPreferences.getString("RoomList", null  );
-//        if (roomListJson != null) {
-//            // Convert the JSON string back to a list of rooms
-//            Gson gson = new Gson();
-//            Type type = new TypeToken<List<Room>>() {}.getType();
-//            List<Room> roomList = gson.fromJson(roomListJson, type);
-//            Toast.makeText(getActivity(), " Get Previous List Room complete" , Toast.LENGTH_SHORT).show();
-//            return roomList;
-//        } else {
-//            return new ArrayList<>(); // Return an empty list if the data doesn't exist in SharedPreferences
-//        }
-//    }
+
+
 
 
 

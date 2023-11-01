@@ -1,8 +1,13 @@
 package com.example.final_ex.object;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Room implements Serializable { // get bundle data
     private String name;
